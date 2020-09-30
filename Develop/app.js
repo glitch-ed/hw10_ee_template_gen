@@ -15,16 +15,16 @@ const render = require("./lib/htmlRenderer");
 const eeTeam = [];
 
 async function inti() {
-    promptQuestions();
+    proManager();
 }
 
-const promptQuestions = () => {
+const proManager = () => {
     console.log("Fill out the prompts and I'll generate a team profile!")
     inquirer
         .prompt([{
             type: "input",
             name: "manager",
-            message: "Manager Name:"
+            message: "Manager's Name:"
         },
         {
             type: "input",
@@ -42,6 +42,113 @@ const promptQuestions = () => {
             message: "Manager Office Number:"
         }
     ])
+
+    .then(function(input) {
+        console.log("manager");
+        const manager = new Manager(input.manager, input.managerId, input.managerEmail, input.managerOffice)
+        eeTeam.push(manager);
+
+        buildTeam();
+    });
+}
+
+
+//Prompts to add a team members
+function createTeam() {
+    inquirer.prompt([{
+        type: "list",
+        name: "build",
+        message: "What team members would you like to add to your team?  If you have completed building your team, select Done.",
+        choices: ["Add an Engineer!", "Add an Intern!", "Done!"]
+    }])
+
+    .then(answers => {
+        switch (answers.build) {
+            case "Add an Engineer!":
+                {
+                    proEngineer();
+                    break;
+                }
+            case "Add an Intern!":
+                {
+                    proIntern();
+                    break;
+                }
+            case "Done!":
+                {
+                    buildTeam();
+                    break;
+                }
+        }
+    })
+}
+
+const proEngineer = () => {
+    inquirer
+        .prompt([{
+            type: "input",
+            name: "engineer",
+            message: "Engineer's Name:"
+        },
+        {
+            type: "input",
+            name: "engineerId",
+            message: "Engineer ID:"
+        },
+        {
+            type: "input",
+            name: "engineerEmail",
+            message: "Engineer's Email:"
+        },
+        {
+            type: "input",
+            name: "engineerGithub",
+            message: "Engineer's GitHub username:"
+        },
+    ])
+
+    .then(function(input) {
+        console.log("engineer");
+        const engineer = new Engineer(input.engineer, input.engineerId, input.engineerEmail, input.engineerGithub)
+        eeTeam.push(engineer);
+
+        createTeam();
+    });
+}
+
+//add intern
+const proIntern = () => {
+    inquirer
+        .prompt([{
+                type: "input",
+                name: "intern",
+                message: "Intern's Name: ",
+            },
+            {
+                type: "input",
+                name: "internId",
+                message: "Intern's ID: ",
+            },
+            {
+                type: "input",
+                name: "internEmail",
+                message: "Intern's Email: ",
+            },
+            {
+                type: "input",
+                name: "internSchool",
+                message: "School the Intern is currently attending: ",
+            },
+        ])
+
+    // push intern to team array
+    .then(function(input) {
+        console.log("intern");
+        const intern = new Intern(input.intern, input.internId, input.internEmail, input.internSchool)
+        eeTeam.push(intern);
+
+        buildTeam();
+    });
 }
 
 // Write code to use inquirer to gather information about the development team members,
