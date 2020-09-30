@@ -14,9 +14,10 @@ const render = require("./lib/htmlRenderer");
 // array for team creation
 const eeTeam = [];
 
-async function inti() {
+async function init() {
     proManager();
 }
+
 
 const proManager = () => {
     console.log("Fill out the prompts and I'll generate a team profile!")
@@ -48,7 +49,7 @@ const proManager = () => {
         const manager = new Manager(input.manager, input.managerId, input.managerEmail, input.managerOffice)
         eeTeam.push(manager);
 
-        buildTeam();
+        createTeam();
     });
 }
 
@@ -147,9 +148,25 @@ const proIntern = () => {
         const intern = new Intern(input.intern, input.internId, input.internEmail, input.internSchool)
         eeTeam.push(intern);
 
-        buildTeam();
+        createTeam();
     });
 }
+
+const buildTeam = async() => {
+    const HTML = render(eeTeam);
+    console.log("Avengers, Assemble!  Your team is complete.")
+    try {
+        fs.writeFileSync(outputPath, HTML);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+init();
+
+
+
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
